@@ -400,9 +400,313 @@
             margin-bottom: 20px;
             color: var(--accent-color);
         }
+
+        /* Add to your existing <style> section */
+        .login-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .login-card {
+            background-color: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 400px;
+            padding: 24px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+        }
+
+        .login-header i {
+            font-size: 2rem;
+        }
+
+        .login-header h1 {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .login-form h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .avatar-colors {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+        }
+
+        .avatar-color {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform 0.2s;
+        }
+
+        .avatar-color.selected {
+            transform: scale(1.2);
+            border: 2px solid var(--text-color);
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .login-button:hover {
+            background-color: #4a4cd1;
+        }
+        /* Add to your existing <style> section */
+            
+        .settings-menu {
+            position: absolute;
+            top: 60px;
+            right: 15px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            width: 250px;
+            z-index: 1000;
+            display: none;
+        }
+
+        .settings-menu.active {
+            display: block;
+        }
+
+        .settings-header {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .settings-user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .settings-avatar {
+            width: 40px;
+            height: 40px;
+        }
+
+        .settings-points {
+            font-size: 0.75rem;
+            color: var(--gray-color);
+            margin-top: 4px;
+        }
+
+        .settings-options {
+            padding: 8px 0;
+        }
+
+        .settings-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: background-color 0.2s;
+        }
+
+        .settings-option:hover {
+            background-color: #f5f5f5;
+        }
+
+        .settings-option i {
+            width: 16px;
+            text-align: center;
+            color: var(--gray-color);
+        }
+
+        .modal-message {
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--gray-color);
+        }
+
+        /* Add to your existing <style> section */
+        .partner-connection {
+            margin: 20px auto;
+            display: flex;
+            gap: 10px;
+            max-width: 300px;
+        }
+
+        .user-id-display {
+            margin: 20px auto;
+            max-width: 300px;
+            text-align: center;
+        }
+
+        .user-id-box {
+            padding: 10px;
+            background-color: #f1f1f1;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: monospace;
+            word-break: break-all;
+        }
+
+        .mb-4 {
+            margin-bottom: 20px;
+        }
+
+        .mt-4 {
+            margin-top: 20px;
+        }
+
+        .matchup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 15px 0;
+        }
+
+        .matchup-user {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .matchup-avatar {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 8px;
+        }
+
+        .matchup-score {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .matchup-vs {
+            font-weight: bold;
+            margin: 0 15px;
+        }
+
+        .progress-comparison {
+            margin: 20px 0;
+        }
+
+        .progress-label {
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .dual-progress {
+            display: flex;
+            justify-content: space-between;
+            gap: 5px;
+        }
+
+        .dual-progress .progress-container {
+            flex: 1;
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            margin-top: 5px;
+        }
+
+        .partner-bar {
+            background-color: #FF9800;
+        }
+
+        .habit-comparison-list {
+            margin-top: 10px;
+        }
+
+        .habit-comparison-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .habit-title {
+            font-weight: 500;
+        }
+
+        .habit-comparison-status {
+            display: flex;
+            gap: 20px;
+        }
+
+        .habit-status {
+            width: 24px;
+            text-align: center;
+        }
+
+        .text-red {
+            color: var(--red-color);
+        }
     </style>
 </head>
 <body>
+        <!-- Add this right after your <body> tag but before the header -->
+    <div id="login-screen" class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <i class="fas fa-bolt"></i>
+                <h1>Game Life</h1>
+            </div>
+            <div class="login-form">
+                <h2>Get Started</h2>
+                <div class="form-group">
+                    <label for="login-name">Your Name</label>
+                    <input type="text" id="login-name" class="form-input" placeholder="Enter your name" required>
+                </div>
+                <div class="form-group">
+                    <label>Choose Avatar Color</label>
+                    <div class="avatar-colors">
+                        <div class="avatar-color" data-color="#5E60CE" style="background-color: #5E60CE;"></div>
+                        <div class="avatar-color" data-color="#48BFE3" style="background-color: #48BFE3;"></div>
+                        <div class="avatar-color" data-color="#4CAF50" style="background-color: #4CAF50;"></div>
+                        <div class="avatar-color" data-color="#FFC107" style="background-color: #FFC107;"></div>
+                        <div class="avatar-color" data-color="#F44336" style="background-color: #F44336;"></div>
+                    </div>
+                </div>
+                <button id="login-button" class="login-button">Start Your Journey</button>
+            </div>
+        </div>
+    </div>
     <header>
         <div class="logo">
             <i class="fas fa-bolt"></i>
@@ -413,6 +717,81 @@
             <div class="avatar" id="currentUserAvatar">M</div>
         </div>
     </header>
+
+    <!-- Add this right after your header section -->
+<div id="settings-menu" class="settings-menu">
+    <div class="settings-header">
+        <div class="settings-user-info">
+            <div class="avatar settings-avatar" id="settings-avatar">M</div>
+            <div>
+                <div id="settings-name">Michael</div>
+                <div class="settings-points" id="settings-points">0 points • Level 1</div>
+            </div>
+        </div>
+    </div>
+    <div class="settings-options">
+        <a href="#" class="settings-option" id="account-settings">
+            <i class="fas fa-user"></i>
+            <span>Account Settings</span>
+        </a>
+        <a href="#" class="settings-option" id="notification-settings">
+            <i class="fas fa-bell"></i>
+            <span>Notifications</span>
+        </a>
+        <a href="#" class="settings-option" id="logout-button">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Log Out</span>
+        </a>
+    </div>
+</div>
+
+<!-- Account Settings Modal -->
+<div class="modal" id="account-settings-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Account Settings</h3>
+            <button class="modal-close" id="close-account-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="account-settings-form">
+                <div class="form-group">
+                    <label class="form-label">Your Name</label>
+                    <input type="text" class="form-input" id="settings-user-name" required>
+                </div>
+                <div class="form-group">
+                    <label>Avatar Color</label>
+                    <div class="avatar-colors">
+                        <div class="avatar-color" data-color="#5E60CE" style="background-color: #5E60CE;"></div>
+                        <div class="avatar-color" data-color="#48BFE3" style="background-color: #48BFE3;"></div>
+                        <div class="avatar-color" data-color="#4CAF50" style="background-color: #4CAF50;"></div>
+                        <div class="avatar-color" data-color="#FFC107" style="background-color: #FFC107;"></div>
+                        <div class="avatar-color" data-color="#F44336" style="background-color: #F44336;"></div>
+                    </div>
+                </div>
+                <div class="form-buttons">
+                    <button type="button" class="form-button form-button-cancel" id="cancel-account-settings">Cancel</button>
+                    <button type="submit" class="form-button form-button-save">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Notification Settings Modal -->
+<div class="modal" id="notification-settings-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Notification Settings</h3>
+            <button class="modal-close" id="close-notification-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p class="modal-message">Notification settings will be available in a future update.</p>
+            <div class="form-buttons">
+                <button type="button" class="form-button form-button-save" id="close-notification-button">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
     <main>
         <div class="nav-tabs">
@@ -465,10 +844,68 @@
 
         <!-- Matchup Tab -->
         <div class="tab-content" id="matchup-tab">
-            <div class="coming-soon">
-                <i class="fas fa-trophy"></i>
-                <h2>Matchup Coming Soon</h2>
-                <p>Battle against your friends to see who can keep up with their habits better!</p>
+            <div id="no-matchup" class="coming-soon">
+                <i class="fas fa-users"></i>
+                <h2>Connect with Partner</h2>
+                <p>Enter your partner's ID to see their progress and compete!</p>
+                <div class="partner-connection">
+                    <input type="text" id="partner-id" class="form-input" placeholder="Partner ID">
+                    <button id="connect-partner" class="form-button form-button-save">Connect</button>
+                </div>
+                <div class="user-id-display">
+                    <p>Your ID (share with your partner):</p>
+                    <div class="user-id-box" id="user-id-display"></div>
+                    <button id="copy-user-id" class="form-button form-button-cancel">Copy to Clipboard</button>
+                </div>
+            </div>
+            
+            <div id="matchup-content" style="display: none;">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <div class="card-title">Weekly Matchup</div>
+                        <div class="card-subtitle" id="matchup-date">Week of March 9, 2025</div>
+                    </div>
+                    <div class="card-content">
+                        <div class="matchup-header">
+                            <div class="matchup-user">
+                                <div class="avatar matchup-avatar" id="user-matchup-avatar">M</div>
+                                <div id="user-matchup-name">Michael</div>
+                                <div class="matchup-score" id="user-matchup-score">0</div>
+                            </div>
+
+                            <div class="matchup-vs">VS</div>
+
+                            <div class="matchup-user">
+                                <div class="avatar matchup-avatar" id="partner-matchup-avatar">K</div>
+                                <div id="partner-matchup-name">Partner</div>
+                                <div class="matchup-score" id="partner-matchup-score">0</div>
+                            </div>
+                        </div>
+
+                        <div class="progress-comparison">
+                            <div class="progress-label">Weekly Progress</div>
+                            <div class="dual-progress">
+                                <div class="progress-container">
+                                    <div class="progress-bar" id="user-progress-bar" style="width: 0%"></div>
+                                </div>
+                                <div class="progress-container">
+                                    <div class="progress-bar partner-bar" id="partner-progress-bar" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            <div class="progress-stats">
+                                <span id="user-progress-stats">0%</span>
+                                <span id="partner-progress-stats">0%</span>
+                            </div>
+                        </div>
+
+                        <div class="section-header mt-4">
+                            <h3>Habit Comparison</h3>
+                        </div>
+                        <div id="habit-comparison-list" class="habit-comparison-list">
+                            <!-- Habits comparison will be added here -->
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -553,6 +990,393 @@
     </div>
 
     <script>
+        // User Management
+        const PARTNER_KEY = 'gamelife_partner_id';
+
+        // Matchup functionality
+        function setupMatchup() {
+            const noMatchupDiv = document.getElementById('no-matchup');
+            const matchupContentDiv = document.getElementById('matchup-content');
+            const partnerId = document.getElementById('partner-id');
+            const connectPartnerBtn = document.getElementById('connect-partner');
+            const userIdDisplay = document.getElementById('user-id-display');
+            const copyUserIdBtn = document.getElementById('copy-user-id');
+            
+            // Display user ID
+            userIdDisplay.textContent = currentUser.id;
+            
+            // Copy user ID to clipboard
+            copyUserIdBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(currentUser.id).then(() => {
+                    alert('Your ID has been copied to clipboard!');
+                }).catch(err => {
+                    console.error('Could not copy text: ', err);
+                });
+            });
+            
+            // Check if partner is already connected
+            const savedPartnerId = localStorage.getItem(PARTNER_KEY);
+            if (savedPartnerId) {
+                noMatchupDiv.style.display = 'none';
+                matchupContentDiv.style.display = 'block';
+                updateMatchupDisplay(savedPartnerId);
+            }
+            
+            // Connect with partner
+            connectPartnerBtn.addEventListener('click', () => {
+                const partnerIdValue = partnerId.value.trim();
+                if (partnerIdValue && partnerIdValue !== currentUser.id.toString()) {
+                    localStorage.setItem(PARTNER_KEY, partnerIdValue);
+                    noMatchupDiv.style.display = 'none';
+                    matchupContentDiv.style.display = 'block';
+                    updateMatchupDisplay(partnerIdValue);
+                } else if (partnerIdValue === currentUser.id.toString()) {
+                    alert("You can't connect with yourself!");
+                } else {
+                    alert("Please enter a valid partner ID!");
+                }
+            });
+            
+            // Tab change listener to refresh matchup data
+            document.querySelectorAll('.nav-tab, .nav-item').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    if (tab.getAttribute('data-tab') === 'matchup') {
+                        const savedPartnerId = localStorage.getItem(PARTNER_KEY);
+                        if (savedPartnerId) {
+                            updateMatchupDisplay(savedPartnerId);
+                        }
+                    }
+                });
+            });
+        }
+
+        // Update matchup display
+        function updateMatchupDisplay(partnerId) {
+            const userMatchupAvatar = document.getElementById('user-matchup-avatar');
+            const userMatchupName = document.getElementById('user-matchup-name');
+            const userMatchupScore = document.getElementById('user-matchup-score');
+            const partnerMatchupAvatar = document.getElementById('partner-matchup-avatar');
+            const partnerMatchupName = document.getElementById('partner-matchup-name');
+            const partnerMatchupScore = document.getElementById('partner-matchup-score');
+            const userProgressBar = document.getElementById('user-progress-bar');
+            const partnerProgressBar = document.getElementById('partner-progress-bar');
+            const userProgressStats = document.getElementById('user-progress-stats');
+            const partnerProgressStats = document.getElementById('partner-progress-stats');
+            const habitComparisonList = document.getElementById('habit-comparison-list');
+            const matchupDate = document.getElementById('matchup-date');
+            
+            // Get current date info
+            const currentDate = new Date();
+            const options = { month: 'long', day: 'numeric', year: 'numeric' };
+            const formattedDate = currentDate.toLocaleDateString('en-US', options);
+            matchupDate.textContent = `Week of ${formattedDate}`;
+            
+            // Set user data
+            userMatchupAvatar.textContent = currentUser.avatar;
+            userMatchupName.textContent = currentUser.name;
+            if (currentUser.avatarColor) {
+                userMatchupAvatar.style.backgroundColor = currentUser.avatarColor;
+            }
+            
+            // Calculate user completion percentage
+            const userCompletedHabits = habits.filter(h => h.completed).length;
+            const userCompletionPercentage = habits.length > 0 ? 
+                Math.round((userCompletedHabits / habits.length) * 100) : 0;
+            
+            userMatchupScore.textContent = userCompletedHabits;
+            userProgressBar.style.width = `${userCompletionPercentage}%`;
+            userProgressStats.textContent = `${userCompletionPercentage}%`;
+            
+            // Try to get partner data from localStorage
+            let partnerData = JSON.parse(localStorage.getItem(`gamelife_user_${partnerId}`)) || null;
+            let partnerHabits = JSON.parse(localStorage.getItem(`gamelife_habits_${partnerId}`)) || [];
+            
+            // For demo purposes, create dummy partner data if none exists
+            if (!partnerData) {
+                partnerData = {
+                    id: partnerId,
+                    name: "Partner",
+                    avatar: "P",
+                    avatarColor: "#FF9800",
+                    level: 1,
+                    points: 0,
+                    streakDays: 0
+                };
+                
+                // Create some dummy habits for the partner
+                if (partnerHabits.length === 0) {
+                    partnerHabits = habits.map(habit => {
+                        // Clone the habit but with randomized completion
+                        return {
+                            ...habit,
+                            completed: Math.random() > 0.5, // 50% chance to be completed
+                        };
+                    });
+                }
+            }
+            
+            // Set partner data
+            partnerMatchupAvatar.textContent = partnerData.avatar || "P";
+            partnerMatchupName.textContent = partnerData.name || "Partner";
+            if (partnerData.avatarColor) {
+                partnerMatchupAvatar.style.backgroundColor = partnerData.avatarColor;
+            }
+            
+            // Calculate partner completion percentage
+            const partnerCompletedHabits = partnerHabits.filter(h => h.completed).length;
+            const partnerCompletionPercentage = partnerHabits.length > 0 ? 
+                Math.round((partnerCompletedHabits / partnerHabits.length) * 100) : 0;
+            
+            partnerMatchupScore.textContent = partnerCompletedHabits;
+            partnerProgressBar.style.width = `${partnerCompletionPercentage}%`;
+            partnerProgressStats.textContent = `${partnerCompletionPercentage}%`;
+            
+            // Create habit comparison list
+            habitComparisonList.innerHTML = '';
+            
+            // Combine habits from both users for comparison
+            const allHabitTitles = new Set();
+            habits.forEach(habit => allHabitTitles.add(habit.title));
+            partnerHabits.forEach(habit => allHabitTitles.add(habit.title));
+            
+            allHabitTitles.forEach(title => {
+                const userHabit = habits.find(h => h.title === title) || { completed: false, streak: 0 };
+                const partnerHabit = partnerHabits.find(h => h.title === title) || { completed: false, streak: 0 };
+                
+                const comparisonItem = document.createElement('div');
+                comparisonItem.className = 'habit-comparison-item';
+                
+                // Create user-friendly display for habit title
+                const displayTitle = title || "Unknown Habit";
+                
+                comparisonItem.innerHTML = `
+                    <div class="habit-title">${displayTitle}</div>
+                    <div class="habit-comparison-status">
+                        <div class="habit-status">
+                            ${userHabit.completed ? 
+                                '<i class="fas fa-check-circle text-green"></i>' : 
+                                '<i class="fas fa-times-circle text-red"></i>'}
+                        </div>
+                        <div class="habit-status">
+                            ${partnerHabit.completed ? 
+                                '<i class="fas fa-check-circle text-green"></i>' : 
+                                '<i class="fas fa-times-circle text-red"></i>'}
+                        </div>
+                    </div>
+                `;
+                
+                habitComparisonList.appendChild(comparisonItem);
+            });
+        }
+
+        // Function to share user data for matchup
+        function shareUserData() {
+            // Save current user data with a prefix that other users could access
+            localStorage.setItem(`gamelife_user_${currentUser.id}`, JSON.stringify(currentUser));
+            localStorage.setItem(`gamelife_habits_${currentUser.id}`, JSON.stringify(habits));
+        }
+
+        // Update your existing updateStorage function
+        function updateStorage() {
+            localStorage.setItem(HABITS_KEY, JSON.stringify(habits));
+            localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUser));
+            // Add this line to share data for matchup
+            shareUserData();
+        }
+
+        function setupUserManagement() {
+            const loginScreen = document.getElementById('login-screen');
+            const loginButton = document.getElementById('login-button');
+            const loginName = document.getElementById('login-name');
+            const avatarColors = document.querySelectorAll('.avatar-color');
+            let selectedColor = '#5E60CE'; // Default color
+            
+            // Check if user exists
+            if (!localStorage.getItem(CURRENT_USER_KEY)) {
+                loginScreen.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            } else {
+                loginScreen.style.display = 'none';
+            }
+            
+            // Select avatar color
+            avatarColors.forEach(color => {
+                color.addEventListener('click', () => {
+                    // Remove selected class from all colors
+                    avatarColors.forEach(c => c.classList.remove('selected'));
+                    // Add selected class to clicked color
+                    color.classList.add('selected');
+                    selectedColor = color.getAttribute('data-color');
+                });
+            });
+            
+            // Set default selected color
+            avatarColors[0].classList.add('selected');
+            
+            // Handle login
+            loginButton.addEventListener('click', () => {
+                const name = loginName.value.trim();
+                if (name) {
+                    // Create user
+                    currentUser = {
+                        id: Date.now(), // Generate unique ID
+                        name: name,
+                        avatar: name.charAt(0).toUpperCase(),
+                        avatarColor: selectedColor,
+                        level: 1,
+                        points: 0,
+                        streakDays: 0,
+                        createdAt: new Date().toISOString()
+                    };
+                    
+                    // Save user
+                    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUser));
+                    
+                    // Hide login screen
+                    loginScreen.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                    
+                    // Initialize app
+                    renderUI();
+                }
+            });
+        }
+
+        // Add to your existing <script> section
+        // Setup Settings Menu
+        function setupSettingsMenu() {
+            const userAvatar = document.getElementById('currentUserAvatar');
+            const settingsMenu = document.getElementById('settings-menu');
+            const settingsAvatar = document.getElementById('settings-avatar');
+            const settingsName = document.getElementById('settings-name');
+            const settingsPoints = document.getElementById('settings-points');
+            const logoutButton = document.getElementById('logout-button');
+            
+            // Account settings
+            const accountSettings = document.getElementById('account-settings');
+            const accountModal = document.getElementById('account-settings-modal');
+            const closeAccountModal = document.getElementById('close-account-modal');
+            const cancelAccountSettings = document.getElementById('cancel-account-settings');
+            const accountForm = document.getElementById('account-settings-form');
+            const settingsUserName = document.getElementById('settings-user-name');
+            const accountAvatarColors = document.querySelectorAll('#account-settings-modal .avatar-color');
+            
+            // Notification settings
+            const notificationSettings = document.getElementById('notification-settings');
+            const notificationModal = document.getElementById('notification-settings-modal');
+            const closeNotificationModal = document.getElementById('close-notification-modal');
+            const closeNotificationButton = document.getElementById('close-notification-button');
+            
+            // Update settings menu with user info
+            function updateSettingsMenu() {
+                if (currentUser.avatarColor) {
+                    settingsAvatar.style.backgroundColor = currentUser.avatarColor;
+                    userAvatar.style.backgroundColor = currentUser.avatarColor;
+                }
+                
+                settingsAvatar.textContent = currentUser.avatar;
+                settingsName.textContent = currentUser.name;
+                settingsPoints.textContent = `${currentUser.points} points • Level ${currentUser.level}`;
+            }
+            
+            // Toggle settings menu
+            userAvatar.addEventListener('click', () => {
+                settingsMenu.classList.toggle('active');
+                updateSettingsMenu();
+            });
+            
+            // Close settings menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!userAvatar.contains(e.target) && !settingsMenu.contains(e.target)) {
+                    settingsMenu.classList.remove('active');
+                }
+            });
+            
+            // Logout
+            logoutButton.addEventListener('click', () => {
+                if (confirm('Are you sure you want to log out? Your data will remain saved.')) {
+                    localStorage.removeItem(CURRENT_USER_KEY);
+                    location.reload();
+                }
+            });
+            
+            // Account Settings
+            accountSettings.addEventListener('click', () => {
+                settingsMenu.classList.remove('active');
+                accountModal.classList.add('active');
+                
+                // Fill form with current user data
+                settingsUserName.value = currentUser.name;
+                
+                // Set current avatar color as selected
+                accountAvatarColors.forEach(color => {
+                    color.classList.remove('selected');
+                    if (color.getAttribute('data-color') === currentUser.avatarColor) {
+                        color.classList.add('selected');
+                    }
+                });
+            });
+            
+            // Close account modal
+            closeAccountModal.addEventListener('click', () => {
+                accountModal.classList.remove('active');
+            });
+            
+            cancelAccountSettings.addEventListener('click', () => {
+                accountModal.classList.remove('active');
+            });
+            
+            // Select avatar color in account settings
+            let selectedAccountColor = currentUser.avatarColor || '#5E60CE';
+            accountAvatarColors.forEach(color => {
+                color.addEventListener('click', () => {
+                    // Remove selected class from all colors
+                    accountAvatarColors.forEach(c => c.classList.remove('selected'));
+                    // Add selected class to clicked color
+                    color.classList.add('selected');
+                    selectedAccountColor = color.getAttribute('data-color');
+                });
+            });
+            
+            // Save account settings
+            accountForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const name = settingsUserName.value.trim();
+                if (name) {
+                    // Update user
+                    currentUser.name = name;
+                    currentUser.avatar = name.charAt(0).toUpperCase();
+                    currentUser.avatarColor = selectedAccountColor;
+                    
+                    // Save user
+                    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUser));
+                    
+                    // Update UI
+                    renderUI();
+                    
+                    // Close modal
+                    accountModal.classList.remove('active');
+                }
+            });
+            
+            // Notification Settings
+            notificationSettings.addEventListener('click', () => {
+                settingsMenu.classList.remove('active');
+                notificationModal.classList.add('active');
+            });
+            
+            // Close notification modal
+            closeNotificationModal.addEventListener('click', () => {
+                notificationModal.classList.remove('active');
+            });
+            
+            closeNotificationButton.addEventListener('click', () => {
+                notificationModal.classList.remove('active');
+            });
+        }
+        
+
         // Local Storage Keys
         const USERS_KEY = 'gamelife_users';
         const HABITS_KEY = 'gamelife_habits';
@@ -623,9 +1447,14 @@
         
         // Render the user interface
         function renderUI() {
-            // Update current user avatar
-            document.getElementById('currentUserAvatar').textContent = currentUser.avatar;
-            
+        // Update current user avatar
+        const userAvatarElement = document.getElementById('currentUserAvatar');
+        userAvatarElement.textContent = currentUser.avatar;
+        
+        // Apply avatar color if it exists
+        if (currentUser.avatarColor) {
+            userAvatarElement.style.backgroundColor = currentUser.avatarColor;
+        }
             // Update Today tab
             const completedHabits = habits.filter(h => h.completed).length;
             const completionPercentage = habits.length > 0 ? (completedHabits / habits.length) * 100 : 0;
@@ -770,11 +1599,15 @@
 
         // Initialize app
         function initApp() {
-            updateMonthYearBadge();
+            setupUserManagement();
             setupTabs();
             setupModal();
+            setupSettingsMenu();
+            setupMatchup(); // Add this line
             checkForReset();
+            updateMonthYearBadge();
             renderUI();
+            shareUserData(); // Add this line to share initial data
         }
         
         // Run app initialization when DOM is loaded
