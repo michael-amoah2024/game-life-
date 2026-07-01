@@ -1,106 +1,388 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Guest Video Book" />
-  <meta name="theme-color" content="#f4eefc" />
-  <title>Guest Video Book</title>
-  <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="apple-touch-icon" href="icons/icon-192.svg" />
-  <link rel="stylesheet" href="styles.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Guest Book &amp; Video</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=DM+Mono:wght@400;500&display=swap');
+
+  :root{
+    --peri:#a7b3e0;--peri-dark:#7b86c8;--peri-bg:#e8eaf6;--card:#ffffff;
+    --gold:#b3893c;--gold-lt:#d4b06a;
+    --ink:#2a2620;--ink-soft:#6b6459;
+    --pf:#c2cfef;--pl:#dce3f8;--pd:#8a9ed6;
+    --ctr:#dac582;--ctr-d:#b5a064;
+    --stm:#8a9a74;--lf:#95a57e;--lf-d:#6e7f5a;
+    --red:#b23b3b;
+    --font-d:'Cormorant Garamond',Georgia,serif;
+    --font-m:'DM Mono',ui-monospace,monospace;
+    --shadow:0 4px 24px rgba(123,134,200,.20);
+    --shadow-lg:0 14px 50px rgba(80,90,160,.28);
+  }
+
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%;margin:0;overflow:hidden;background:var(--peri-bg);font-family:var(--font-d);color:var(--ink);user-select:none;-webkit-user-select:none}
+
+  #app{position:fixed;inset:0}
+  .screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .4s ease}
+  .screen.hidden{opacity:0;pointer-events:none}
+
+  /* ====== FLOWER ANIMATIONS ====== */
+  .bloom{transform-origin:center;animation:pop .7s cubic-bezier(.34,1.56,.64,1) both}
+  @keyframes pop{from{transform:scale(0) rotate(-15deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+  .bl1{animation-delay:.1s}.bl2{animation-delay:.22s}.bl3{animation-delay:.34s}.bl4{animation-delay:.46s}
+  .bl5{animation-delay:.58s}.bl6{animation-delay:.7s}.bl7{animation-delay:.82s}.bl8{animation-delay:.94s}
+  .bl9{animation-delay:1.06s}.bl10{animation-delay:1.18s}.bl11{animation-delay:1.3s}.bl12{animation-delay:1.42s}
+
+  .sway-l{animation:sway-l 8s ease-in-out infinite}
+  @keyframes sway-l{0%,100%{transform:rotate(0)}50%{transform:rotate(1.8deg)}}
+  .sway-r{animation:sway-r 9s ease-in-out infinite}
+  @keyframes sway-r{0%,100%{transform:rotate(0)}50%{transform:rotate(-1.8deg)}}
+
+  /* floral containers */
+  .fc{position:absolute;z-index:1;pointer-events:none;overflow:visible}
+  .fc svg{width:100%;height:100%;overflow:visible}
+
+  /* ====== DRIFTING PETALS ====== */
+  .drift{position:absolute;pointer-events:none;z-index:2;opacity:0;animation:fl linear infinite}
+  @keyframes fl{0%{transform:translate(0,0) rotate(0);opacity:0}10%{opacity:.5}85%{opacity:.3}100%{transform:translate(25px,-380px) rotate(180deg);opacity:0}}
+
+  /* ====== IDLE ====== */
+  .idle{background:radial-gradient(ellipse at 50% 30%,var(--card) 0%,var(--peri-bg) 72%);text-align:center;padding:0 30px}
+  .z2{position:relative;z-index:3;display:flex;flex-direction:column;align-items:center}
+  .headline{font-family:var(--font-d);font-weight:500;font-style:italic;font-size:clamp(34px,5.5vw,58px);line-height:1.08;color:var(--gold);margin:0 0 16px}
+  .tagline{color:var(--ink);font-size:clamp(16px,2.2vw,20px);line-height:1.55;margin:0 auto 28px;max-width:440px}
+  .names{font-family:var(--font-d);font-weight:500;font-size:clamp(24px,3.8vw,38px);color:var(--peri-dark);margin:0}
+  .date-line{font-family:var(--font-m);color:var(--ink-soft);font-size:14px;letter-spacing:.04em;margin:8px 0 36px}
+  .tap-target{
+    width:130px;height:130px;border-radius:50%;
+    background:var(--gold);border:4px solid var(--card);
+    color:var(--card);font-family:var(--font-d);font-weight:700;font-size:19px;
+    display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.3;
+    cursor:pointer;box-shadow:var(--shadow-lg);
+    animation:glow 3s ease-in-out infinite;
+    margin:0 auto;
+  }
+  @keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(179,137,60,.25),var(--shadow-lg)}50%{box-shadow:0 0 0 18px rgba(179,137,60,0),var(--shadow-lg)}}
+  .hint{margin-top:22px;color:var(--ink-soft);font-size:15px;position:relative;z-index:3}
+
+  /* ====== RECORD ====== */
+  .record{padding:0;background:var(--ink)}
+  .prompt-bar{position:absolute;top:0;left:0;right:0;z-index:5;padding:24px 24px 48px;text-align:center;background:linear-gradient(to bottom,var(--peri-dark),rgba(123,134,200,0))}
+  .prompt-bar p{font-family:var(--font-d);font-weight:500;font-style:italic;font-size:clamp(21px,3.2vw,30px);color:var(--card);margin:0;text-shadow:0 2px 10px rgba(0,0,0,.25)}
+  video#preview{width:100%;height:100%;object-fit:cover}
+  .hud{position:absolute;bottom:0;left:0;right:0;z-index:5;padding:30px 22px 44px;display:flex;flex-direction:column;align-items:center;gap:18px;background:linear-gradient(to top,rgba(20,18,14,.88),transparent)}
+  .rec-indicator{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.92);color:var(--ink);padding:7px 16px;border-radius:20px;font-size:15px;font-weight:600;box-shadow:var(--shadow)}
+  .rec-indicator .dot{width:10px;height:10px;border-radius:50%;background:var(--red);animation:blink 1s infinite}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+  .rec-toggle{width:80px;height:80px;border-radius:50%;background:var(--gold);border:4px solid var(--card);cursor:pointer;position:relative;box-shadow:var(--shadow-lg)}
+  .rec-toggle .shape{position:absolute;inset:0;margin:auto;background:var(--card);transition:all .2s ease}
+  .rec-toggle:not(.active) .shape{width:0;height:0}
+  .rec-toggle.active .shape{width:26px;height:26px;border-radius:6px;background:var(--red)}
+  .skip-link{background:none;border:none;color:rgba(255,255,255,.75);font-family:var(--font-d);font-weight:600;font-size:15px;text-decoration:underline;cursor:pointer}
+
+  /* ====== REVIEW ====== */
+  .review{background:var(--peri-bg);padding:26px;gap:24px}
+  video#playback{width:100%;max-height:66vh;border-radius:26px;background:#000;box-shadow:var(--shadow-lg);border:4px solid var(--card)}
+  .review-actions{display:flex;gap:16px;margin-top:22px}
+  .btn{font-family:var(--font-d);font-weight:700;font-size:17px;padding:14px 28px;border-radius:999px;cursor:pointer;transition:transform .15s ease}
+  .btn.ghost{background:var(--card);border:2px solid var(--peri-dark);color:var(--peri-dark)}
+  .btn.solid{background:var(--gold);border:2px solid var(--gold);color:var(--card);box-shadow:var(--shadow)}
+
+  /* ====== THANKS ====== */
+  .thanks{background:radial-gradient(ellipse at 50% 30%,var(--card),var(--peri-bg) 72%);text-align:center}
+  .thanks h2{font-family:var(--font-d);font-weight:500;font-style:italic;color:var(--gold);font-size:46px;margin:0 0 12px;z-index:3;position:relative}
+  .thanks p{color:var(--ink-soft);font-size:18px;z-index:3;position:relative}
+
+  /* ====== ERROR ====== */
+  .error{background:var(--peri-bg);text-align:center;padding:0 60px}
+  .error h2{font-family:var(--font-d);font-weight:500;color:var(--red);margin-bottom:14px}
+  .error p{color:var(--ink);line-height:1.6;max-width:480px}
+
+  /* ====== HOST ====== */
+  .host{background:var(--card);color:var(--ink);align-items:stretch;justify-content:flex-start;padding:40px 50px;overflow-y:auto}
+  .host h2{font-family:var(--font-d);font-weight:500;color:var(--peri-dark);margin:0 0 4px;font-size:30px}
+  .host .sub{color:var(--ink-soft);margin:0 0 24px;font-size:14px;font-family:var(--font-m)}
+  .host-actions{display:flex;gap:14px;margin-bottom:24px}
+  .host-actions .btn.ghost{border-color:var(--peri-dark);color:var(--peri-dark);background:var(--card)}
+  #clipList{display:flex;flex-direction:column;gap:10px}
+  .clip-row{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:var(--peri-bg);border-radius:14px;font-size:16px;font-weight:600}
+  .clip-row a,.clip-row button{font-family:var(--font-d);font-weight:700;font-size:14px;padding:8px 16px;border-radius:999px;cursor:pointer;text-decoration:none;margin-left:8px}
+  .clip-row .dl{background:var(--gold);color:var(--card);border:none}
+  .clip-row .del{background:transparent;border:2px solid var(--red);color:var(--red)}
+  .empty-note{color:var(--ink-soft);font-style:italic}
+</style>
 </head>
 <body>
-  <main class="app-shell">
-    <section id="homeScreen" class="screen active home-screen">
-      <div class="hero-card">
-        <p class="eyebrow">Michael & Kianna</p>
-        <h1>Guest Video Book</h1>
-        <p class="subtitle">Leave us a sweet video message we can keep forever.</p>
-        <div class="prompt-card">
-          <p id="promptText">Tell us your favorite memory, a piece of advice, or your wedding day wish.</p>
-        </div>
-        <button id="startBtn" class="primary-btn">Record a Message</button>
-        <button id="galleryBtn" class="secondary-btn">View Saved Videos</button>
-        <p class="privacy-note">Everything saves directly on this iPad. No server. No cloud.</p>
-      </div>
-    </section>
+<div id="app">
 
-    <section id="recordScreen" class="screen record-screen">
-      <div class="top-bar">
-        <button id="backFromRecordBtn" class="icon-btn">←</button>
-        <div>
-          <p class="eyebrow small">Step 1</p>
-          <h2>Record your message</h2>
-        </div>
-      </div>
+  <!-- ====== IDLE ====== -->
+  <div class="screen idle" id="screen-idle">
 
-      <div class="camera-wrap">
-        <video id="previewVideo" autoplay muted playsinline></video>
-        <div id="countdown" class="countdown hidden">3</div>
-        <div id="recordingBadge" class="recording-badge hidden"><span></span> Recording</div>
-      </div>
+    <!-- ===== LEFT FLORAL — anchored bottom-left ===== -->
+    <div class="fc" style="bottom:0;left:0;width:220px;height:55%">
+      <svg class="sway-l" viewBox="0 0 220 400" xmlns="http://www.w3.org/2000/svg">
+        <!-- stems -->
+        <path d="M30,400 C35,360 40,320 38,280 C36,250 42,220 50,190 C56,168 60,148 58,120" fill="none" stroke="var(--stm)" stroke-width="2.8" stroke-linecap="round" opacity=".82"/>
+        <path d="M60,400 C68,365 72,340 65,305 C60,278 70,255 82,230" fill="none" stroke="var(--stm)" stroke-width="2.4" stroke-linecap="round" opacity=".75"/>
+        <!-- leaves on stems -->
+        <ellipse cx="34" cy="350" rx="14" ry="6" transform="rotate(-50 34 350)" fill="var(--lf)" opacity=".8"/>
+        <ellipse cx="38" cy="310" rx="12" ry="5.5" transform="rotate(30 38 310)" fill="var(--lf-d)" opacity=".72"/>
+        <ellipse cx="40" cy="270" rx="11" ry="5" transform="rotate(-35 40 270)" fill="var(--lf)" opacity=".68"/>
+        <ellipse cx="48" cy="228" rx="10" ry="4.5" transform="rotate(25 48 228)" fill="var(--lf-d)" opacity=".65"/>
+        <ellipse cx="55" cy="178" rx="9" ry="4" transform="rotate(-30 55 178)" fill="var(--lf)" opacity=".6"/>
+        <ellipse cx="62" cy="365" rx="12" ry="5.5" transform="rotate(40 62 365)" fill="var(--lf-d)" opacity=".75"/>
+        <ellipse cx="68" cy="325" rx="10" ry="5" transform="rotate(-25 68 325)" fill="var(--lf)" opacity=".7"/>
+        <ellipse cx="72" cy="280" rx="9" ry="4.5" transform="rotate(20 72 280)" fill="var(--lf-d)" opacity=".65"/>
+        <!-- flowers — bottom up -->
+        <g class="bloom bl1" transform="translate(26,385) scale(.85)">
+          <circle cx="0" cy="-9" r="6.5" fill="var(--pf)"/><circle cx="8.5" cy="-3" r="6.5" fill="var(--pl)"/><circle cx="5.3" cy="7" r="6.5" fill="var(--pf)"/><circle cx="-5.3" cy="7" r="6.5" fill="var(--pl)"/><circle cx="-8.5" cy="-3" r="6.5" fill="var(--pf)"/>
+          <circle r="3.5" fill="var(--ctr)"/><circle r="1.8" fill="var(--ctr-d)"/>
+        </g>
+        <g class="bloom bl2" transform="translate(55,378) scale(.7)">
+          <circle cx="0" cy="-9" r="6.5" fill="var(--pl)"/><circle cx="8.5" cy="-3" r="6.5" fill="var(--pf)"/><circle cx="5.3" cy="7" r="6.5" fill="var(--pl)"/><circle cx="-5.3" cy="7" r="6.5" fill="var(--pf)"/><circle cx="-8.5" cy="-3" r="6.5" fill="var(--pl)"/>
+          <circle r="3.5" fill="var(--ctr)"/><circle r="1.8" fill="var(--ctr-d)"/>
+        </g>
+        <g class="bloom bl3" transform="translate(42,340) scale(.95)">
+          <circle cx="0" cy="-9" r="6.5" fill="var(--pf)"/><circle cx="8.5" cy="-3" r="6.5" fill="var(--pl)"/><circle cx="5.3" cy="7" r="6.5" fill="var(--pf)"/><circle cx="-5.3" cy="7" r="6.5" fill="var(--pl)"/><circle cx="-8.5" cy="-3" r="6.5" fill="var(--pf)"/>
+          <circle r="3.5" fill="var(--ctr)"/><circle r="1.8" fill="var(--ctr-d)"/>
+        </g>
+        <g class="bloom bl4" transform="translate(72,310) scale(.6)">
+          <circle cx="0" cy="-9" r="6.5" fill="var(--pl)"/><circle cx="8.5" cy="-3" r="6.5" fill="var(--pf)"/><circle cx="5.3" cy="7" r="6.5" fill="var(--pl)"/><circle cx="-5.3" cy="7" r="6.5" fill="var(--pf)"/><circle cx="-8.5" cy="-3" r="6.5" fill="var(--pl)"/>
+          <circle r="3.5" fill="var(--ctr)"/><circle r="1.8" fill="var(--ctr-d)"/>
+        </g>
+        <g class="bloom bl5" transform="translate(38,288) scale(.75)">
+          <circle cx="0" cy="-9" r="6.5" fill="var(--pf)"/><circle cx="8.5" cy="-3" r="6.5" fill="var(--pl)"/><circle cx="5.3" cy="7" r="6.5" fill="var(--pf)"/><circle cx="-5.3" cy="7" r="6.5" fill="var(--pl)"/><circle cx="-8.5" cy="-3" r="6.5" fill="var(--pf)"/>
+          <circle r="3.5" fill="var(--ctr)"/><circle r="1.8" fill="var(--ctr-d)"/>
+        </g>
+        <g class="bloom bl6" transform="translate(78,265) scale(.55)">
+          <circle cx="0" cy="-9" r="6.5" fill="var(--pl)"/><circle cx="8.5" cy="-3" r="6.5" fill="var(--pf)"/><circle cx="5.3" cy="7" r="6.5" fill="var(--pl)"/><circle cx="-5.3" cy="7" r="6.5" fill="var(--pf)"/><circle cx="-8.5" cy="-3" r="6.5" fill="var(--pl)"/>
+          <circle r="3.5" fill="var(--ctr)"/><circle r="1.8" fill="var(--ctr-d)"/>
+        </g>
+        <g class="bloom bl7" transform="translate(52,240) scale(.65)">
+          <circle cx="0" cy="-9" r="6.5" fill="var(--pf)"/><circle cx="8.5" cy="-3" r="6.5" fill="var(--pl)"/><circle cx="5.3" cy="7" r="6.5" fill="var(--pf)"/><circle cx="-5.3" cy="7" r="6.5" fill="var(--pl)"/><circle cx="-8.5" cy="-3" r="6.5" fill="var(--pf)"/>
+          <circle r="3.5" fill="var(--ctr)"/><circle r="1.8" fill="var(--ctr-d)"/>
+        </g>
+        <g class="bloom bl8" transform="translate(56,195) scale(.5)">
+          <circle cx="0" cy="-9" r="6.5" fill="var(--pl)"/><circle cx="8.5" cy="-3" r="6.5" fill="var(--pf)"/><circle cx="5.3" cy="7" r="6.5" fill="var(--pl)"/><circle cx="-5.3" cy="7" r="6.5" fill="var(--pf)"/><circle cx="-8.5" cy="-3" r="6.5" fill="var(--pl)"/>
+          <circle r="3.5" fill="var(--ctr)"/><circle r="1.8" fill="var(--ctr-d)"/>
+        </g>
+        <!-- buds -->
+        <circle cx="58" cy="152" r="3.5" fill="var(--pd)" opacity=".55"/>
+        <circle cx="56" cy="128" r="3" fill="var(--pd)" opacity=".45"/>
+        <circle cx="85" cy="238" r="2.8" fill="var(--pd)" opacity=".5"/>
+      </svg>
+    </div>
 
-      <div class="guest-form">
-        <label for="guestName">Your name</label>
-        <input id="guestName" type="text" autocomplete="off" placeholder="Type your name" />
-      </div>
+    <!-- ===== RIGHT FLORAL — anchored bottom-right ===== -->
+    <div class="fc" style="bottom:0;right:0;width:250px;height:60%">
+      <svg class="sway-r" viewBox="0 0 250 440" xmlns="http://www.w3.org/2000/svg">
+        <!-- stems -->
+        <path d="M220,440 C215,395 210,360 214,320 C218,285 210,255 200,220 C192,195 190,170 195,140" fill="none" stroke="var(--stm)" stroke-width="3" stroke-linecap="round" opacity=".82"/>
+        <path d="M195,440 C188,400 178,370 182,335 C186,305 175,278 165,248 C158,228 162,208 168,185" fill="none" stroke="var(--stm)" stroke-width="2.5" stroke-linecap="round" opacity=".75"/>
+        <path d="M240,440 C238,410 232,385 228,355" fill="none" stroke="var(--stm)" stroke-width="2" stroke-linecap="round" opacity=".65"/>
+        <!-- leaves -->
+        <ellipse cx="218" cy="390" rx="15" ry="6.5" transform="rotate(45 218 390)" fill="var(--lf)" opacity=".8"/>
+        <ellipse cx="212" cy="350" rx="13" ry="6" transform="rotate(-30 212 350)" fill="var(--lf-d)" opacity=".72"/>
+        <ellipse cx="215" cy="310" rx="11" ry="5" transform="rotate(35 215 310)" fill="var(--lf)" opacity=".68"/>
+        <ellipse cx="206" cy="260" rx="10" ry="4.5" transform="rotate(-28 206 260)" fill="var(--lf-d)" opacity=".65"/>
+        <ellipse cx="196" cy="210" rx="9" ry="4" transform="rotate(22 196 210)" fill="var(--lf)" opacity=".6"/>
+        <ellipse cx="190" cy="395" rx="13" ry="5.5" transform="rotate(-35 190 395)" fill="var(--lf-d)" opacity=".75"/>
+        <ellipse cx="180" cy="355" rx="11" ry="5" transform="rotate(28 180 355)" fill="var(--lf)" opacity=".7"/>
+        <ellipse cx="172" cy="310" rx="10" ry="4.5" transform="rotate(-22 172 310)" fill="var(--lf-d)" opacity=".65"/>
+        <ellipse cx="236" cy="410" rx="10" ry="4.5" transform="rotate(-40 236 410)" fill="var(--lf)" opacity=".6"/>
+        <ellipse cx="232" cy="375" rx="9" ry="4" transform="rotate(25 232 375)" fill="var(--lf-d)" opacity=".55"/>
+        <!-- flowers -->
+        <g class="bloom bl1" transform="translate(224,420) scale(.8)">
+          <circle cx="0" cy="-9" r="7" fill="var(--pf)"/><circle cx="9" cy="-3" r="7" fill="var(--pl)"/><circle cx="5.6" cy="7.5" r="7" fill="var(--pf)"/><circle cx="-5.6" cy="7.5" r="7" fill="var(--pl)"/><circle cx="-9" cy="-3" r="7" fill="var(--pf)"/>
+          <circle r="3.8" fill="var(--ctr)"/><circle r="2" fill="var(--ctr-d)"/>
+        </g>
+        <g class="bloom bl2" transform="translate(200,415) scale(1)">
+          <circle cx="0" cy="-9" r="7" fill="var(--pl)"/><circle cx="9" cy="-3" r="7" fill="var(--pf)"/><circle cx="5.6" cy="7.5" r="7" fill="var(--pl)"/><circle cx="-5.6" cy="7.5" r="7" fill="var(--pf)"/><circle cx="-9" cy="-3" r="7" fill="var(--pl)"/>
+          <circle r="3.8" fill="var(--ctr)"/><circle r="2" fill="var(--ctr-d)"/>
+        </g>
+        <g class="bloom bl3" transform="translate(238,390) scale(.65)">
+          <circle cx="0" cy="-9" r="7" fill="var(--pf)"/><circle cx="9" cy="-3" r="7" fill="var(--pl)"/><circle cx="5.6" cy="7.5" r="7" fill="var(--pf)"/><circle cx="-5.6" cy="7.5" r="7" fill="var(--pl)"/><circle cx="-9" cy="-3" r="7" fill="var(--pf)"/>
+          <circle r="3.8" fill="var(--ctr)"/><circle r="2" fill="var(--ctr-d)"/>
+        </g>
+        <g class="bloom bl4" transform="translate(175,385) scale(.75)">
+          <circle cx="0" cy="-9" r="7" fill="var(--pl)"/><circle cx="9" cy="-3" r="7" fill="var(--pf)"/><circle cx="5.6" cy="7.5" r="7" fill="var(--pl)"/><circle cx="-5.6" cy="7.5" r="7" fill="var(--pf)"/><circle cx="-9" cy="-3" r="7" fill="var(--pl)"/>
+          <circle r="3.8" fill="var(--ctr)"/><circle r="2" fill="var(--ctr-d)"/>
+        </g>
+        <g class="bloom bl5" transform="translate(215,360) scale(.9)">
+          <circle cx="0" cy="-9" r="7" fill="var(--pf)"/><circle cx="9" cy="-3" r="7" fill="var(--pl)"/><circle cx="5.6" cy="7.5" r="7" fill="var(--pf)"/><circle cx="-5.6" cy="7.5" r="7" fill="var(--pl)"/><circle cx="-9" cy="-3" r="7" fill="var(--pf)"/>
+          <circle r="3.8" fill="var(--ctr)"/><circle r="2" fill="var(--ctr-d)"/>
+        </g>
+        <g class="bloom bl6" transform="translate(185,345) scale(.6)">
+          <circle cx="0" cy="-9" r="7" fill="var(--pl)"/><circle cx="9" cy="-3" r="7" fill="var(--pf)"/><circle cx="5.6" cy="7.5" r="7" fill="var(--pl)"/><circle cx="-5.6" cy="7.5" r="7" fill="var(--pf)"/><circle cx="-9" cy="-3" r="7" fill="var(--pl)"/>
+          <circle r="3.8" fill="var(--ctr)"/><circle r="2" fill="var(--ctr-d)"/>
+        </g>
+        <g class="bloom bl7" transform="translate(208,315) scale(.7)">
+          <circle cx="0" cy="-9" r="7" fill="var(--pf)"/><circle cx="9" cy="-3" r="7" fill="var(--pl)"/><circle cx="5.6" cy="7.5" r="7" fill="var(--pf)"/><circle cx="-5.6" cy="7.5" r="7" fill="var(--pl)"/><circle cx="-9" cy="-3" r="7" fill="var(--pf)"/>
+          <circle r="3.8" fill="var(--ctr)"/><circle r="2" fill="var(--ctr-d)"/>
+        </g>
+        <g class="bloom bl8" transform="translate(170,290) scale(.55)">
+          <circle cx="0" cy="-9" r="7" fill="var(--pl)"/><circle cx="9" cy="-3" r="7" fill="var(--pf)"/><circle cx="5.6" cy="7.5" r="7" fill="var(--pl)"/><circle cx="-5.6" cy="7.5" r="7" fill="var(--pf)"/><circle cx="-9" cy="-3" r="7" fill="var(--pl)"/>
+          <circle r="3.8" fill="var(--ctr)"/><circle r="2" fill="var(--ctr-d)"/>
+        </g>
+        <g class="bloom bl9" transform="translate(198,265) scale(.5)">
+          <circle cx="0" cy="-9" r="7" fill="var(--pf)"/><circle cx="9" cy="-3" r="7" fill="var(--pl)"/><circle cx="5.6" cy="7.5" r="7" fill="var(--pf)"/><circle cx="-5.6" cy="7.5" r="7" fill="var(--pl)"/><circle cx="-9" cy="-3" r="7" fill="var(--pf)"/>
+          <circle r="3.8" fill="var(--ctr)"/><circle r="2" fill="var(--ctr-d)"/>
+        </g>
+        <g class="bloom bl10" transform="translate(195,225) scale(.45)">
+          <circle cx="0" cy="-9" r="7" fill="var(--pl)"/><circle cx="9" cy="-3" r="7" fill="var(--pf)"/><circle cx="5.6" cy="7.5" r="7" fill="var(--pl)"/><circle cx="-5.6" cy="7.5" r="7" fill="var(--pf)"/><circle cx="-9" cy="-3" r="7" fill="var(--pl)"/>
+          <circle r="3.8" fill="var(--ctr)"/><circle r="2" fill="var(--ctr-d)"/>
+        </g>
+        <!-- buds -->
+        <circle cx="196" cy="190" r="3.5" fill="var(--pd)" opacity=".5"/>
+        <circle cx="194" cy="155" r="3" fill="var(--pd)" opacity=".42"/>
+        <circle cx="168" cy="252" r="2.8" fill="var(--pd)" opacity=".48"/>
+      </svg>
+    </div>
 
-      <div class="controls">
-        <button id="recordBtn" class="primary-btn record-btn">Start Recording</button>
-        <button id="stopBtn" class="danger-btn hidden">Stop Recording</button>
-      </div>
-      <p id="recordHelp" class="help-text">Tip: Hold the iPad steady and speak clearly.</p>
-    </section>
+    <!-- ===== BOTTOM CENTER FLOWERS ===== -->
+    <div class="fc" style="bottom:0;left:50%;transform:translateX(-50%);width:500px;height:90px">
+      <svg viewBox="0 0 500 90" xmlns="http://www.w3.org/2000/svg">
+        <!-- scattered small stems -->
+        <path d="M120,90 C118,72 125,58 130,42" fill="none" stroke="var(--stm)" stroke-width="1.8" stroke-linecap="round" opacity=".6"/>
+        <path d="M200,90 C198,75 195,62 200,48" fill="none" stroke="var(--stm)" stroke-width="1.5" stroke-linecap="round" opacity=".55"/>
+        <path d="M310,90 C314,74 308,60 312,44" fill="none" stroke="var(--stm)" stroke-width="1.8" stroke-linecap="round" opacity=".6"/>
+        <path d="M380,90 C378,78 382,65 378,52" fill="none" stroke="var(--stm)" stroke-width="1.5" stroke-linecap="round" opacity=".55"/>
+        <!-- tiny leaves -->
+        <ellipse cx="124" cy="68" rx="6" ry="3" transform="rotate(-30 124 68)" fill="var(--lf)" opacity=".55"/>
+        <ellipse cx="310" cy="70" rx="6" ry="3" transform="rotate(25 310 70)" fill="var(--lf-d)" opacity=".5"/>
+        <ellipse cx="198" cy="72" rx="5" ry="2.5" transform="rotate(-20 198 72)" fill="var(--lf)" opacity=".5"/>
+        <ellipse cx="382" cy="72" rx="5" ry="2.5" transform="rotate(30 382 72)" fill="var(--lf-d)" opacity=".48"/>
+        <!-- small flowers -->
+        <g class="bloom bl9" transform="translate(130,38) scale(.5)">
+          <circle cx="0" cy="-9" r="6.5" fill="var(--pf)"/><circle cx="8.5" cy="-3" r="6.5" fill="var(--pl)"/><circle cx="5.3" cy="7" r="6.5" fill="var(--pf)"/><circle cx="-5.3" cy="7" r="6.5" fill="var(--pl)"/><circle cx="-8.5" cy="-3" r="6.5" fill="var(--pf)"/>
+          <circle r="3.5" fill="var(--ctr)"/><circle r="1.8" fill="var(--ctr-d)"/>
+        </g>
+        <g class="bloom bl10" transform="translate(200,44) scale(.4)">
+          <circle cx="0" cy="-9" r="6.5" fill="var(--pl)"/><circle cx="8.5" cy="-3" r="6.5" fill="var(--pf)"/><circle cx="5.3" cy="7" r="6.5" fill="var(--pl)"/><circle cx="-5.3" cy="7" r="6.5" fill="var(--pf)"/><circle cx="-8.5" cy="-3" r="6.5" fill="var(--pl)"/>
+          <circle r="3.5" fill="var(--ctr)"/><circle r="1.8" fill="var(--ctr-d)"/>
+        </g>
+        <g class="bloom bl11" transform="translate(312,40) scale(.5)">
+          <circle cx="0" cy="-9" r="6.5" fill="var(--pf)"/><circle cx="8.5" cy="-3" r="6.5" fill="var(--pl)"/><circle cx="5.3" cy="7" r="6.5" fill="var(--pf)"/><circle cx="-5.3" cy="7" r="6.5" fill="var(--pl)"/><circle cx="-8.5" cy="-3" r="6.5" fill="var(--pf)"/>
+          <circle r="3.5" fill="var(--ctr)"/><circle r="1.8" fill="var(--ctr-d)"/>
+        </g>
+        <g class="bloom bl12" transform="translate(378,48) scale(.4)">
+          <circle cx="0" cy="-9" r="6.5" fill="var(--pl)"/><circle cx="8.5" cy="-3" r="6.5" fill="var(--pf)"/><circle cx="5.3" cy="7" r="6.5" fill="var(--pl)"/><circle cx="-5.3" cy="7" r="6.5" fill="var(--pf)"/><circle cx="-8.5" cy="-3" r="6.5" fill="var(--pl)"/>
+          <circle r="3.5" fill="var(--ctr)"/><circle r="1.8" fill="var(--ctr-d)"/>
+        </g>
+        <!-- buds -->
+        <circle cx="160" cy="80" r="2.2" fill="var(--pd)" opacity=".4"/>
+        <circle cx="260" cy="85" r="2" fill="var(--pd)" opacity=".35"/>
+        <circle cx="350" cy="82" r="2.2" fill="var(--pd)" opacity=".4"/>
+      </svg>
+    </div>
 
-    <section id="reviewScreen" class="screen review-screen">
-      <div class="top-bar">
-        <button id="discardBtn" class="icon-btn">←</button>
-        <div>
-          <p class="eyebrow small">Step 2</p>
-          <h2>Review your video</h2>
-        </div>
-      </div>
+    <!-- drifting petals -->
+    <div class="drift" style="left:12%;bottom:15%;width:14px;height:18px;animation-duration:17s;animation-delay:0s"><svg viewBox="0 0 14 18"><ellipse cx="7" cy="9" rx="6" ry="8.5" fill="var(--pf)" opacity=".5"/></svg></div>
+    <div class="drift" style="left:32%;bottom:10%;width:11px;height:15px;animation-duration:22s;animation-delay:4s"><svg viewBox="0 0 11 15"><ellipse cx="5.5" cy="7.5" rx="5" ry="7" fill="var(--pl)" opacity=".45"/></svg></div>
+    <div class="drift" style="left:55%;bottom:18%;width:12px;height:16px;animation-duration:19s;animation-delay:7s"><svg viewBox="0 0 12 16"><ellipse cx="6" cy="8" rx="5.5" ry="7.5" fill="var(--pf)" opacity=".4"/></svg></div>
+    <div class="drift" style="left:75%;bottom:8%;width:10px;height:14px;animation-duration:21s;animation-delay:2s"><svg viewBox="0 0 10 14"><ellipse cx="5" cy="7" rx="4.5" ry="6.5" fill="var(--pl)" opacity=".45"/></svg></div>
+    <div class="drift" style="left:45%;bottom:22%;width:9px;height:12px;animation-duration:25s;animation-delay:11s"><svg viewBox="0 0 9 12"><ellipse cx="4.5" cy="6" rx="4" ry="5.5" fill="var(--pd)" opacity=".3"/></svg></div>
+    <div class="drift" style="left:88%;bottom:12%;width:13px;height:17px;animation-duration:18s;animation-delay:6s"><svg viewBox="0 0 13 17"><ellipse cx="6.5" cy="8.5" rx="5.5" ry="8" fill="var(--pf)" opacity=".42"/></svg></div>
 
-      <video id="reviewVideo" controls playsinline></video>
-      <div class="controls two-col">
-        <button id="saveBtn" class="primary-btn">Save Video</button>
-        <button id="retakeBtn" class="secondary-btn">Retake</button>
-      </div>
-    </section>
+    <!-- main content -->
+    <div class="z2">
+      <h1 class="headline" id="hostTrigger">Guest Book<br>&amp; Video</h1>
+      <p class="tagline">Leave us a message!<br>Sign our guest book or record a short video<br>to help us remember this special day.</p>
+      <p class="names" id="namesDisplay"></p>
+      <p class="date-line" id="dateDisplay"></p>
+      <div class="tap-target" id="startBtn">Tap to<br>Record</div>
+    </div>
+    <p class="hint">tap the circle to begin recording</p>
+  </div>
 
-    <section id="savedScreen" class="screen saved-screen">
-      <div class="success-card">
-        <div class="heart">♥</div>
-        <h2>Thank you!</h2>
-        <p>Your message was saved on this iPad.</p>
-        <button id="doneBtn" class="primary-btn">Done</button>
-      </div>
-    </section>
+  <!-- ====== RECORD ====== -->
+  <div class="screen record hidden" id="screen-record">
+    <div class="prompt-bar"><p id="promptText"></p></div>
+    <video id="preview" autoplay playsinline muted></video>
+    <div class="hud">
+      <div class="rec-indicator hidden" id="recIndicator"><span class="dot"></span><span class="mono" style="font-family:var(--font-m)" id="timer">00:00</span></div>
+      <button class="rec-toggle" id="recordToggle"><span class="shape"></span></button>
+      <button class="skip-link" id="cancelRecord">cancel and go back</button>
+    </div>
+  </div>
 
-    <section id="galleryScreen" class="screen gallery-screen">
-      <div class="top-bar">
-        <button id="backFromGalleryBtn" class="icon-btn">←</button>
-        <div>
-          <p class="eyebrow small">Local Videos</p>
-          <h2>Saved Messages</h2>
-        </div>
-      </div>
+  <!-- ====== REVIEW ====== -->
+  <div class="screen review hidden" id="screen-review">
+    <video id="playback" controls playsinline></video>
+    <div class="review-actions">
+      <button class="btn ghost" id="retakeBtn">Record again</button>
+      <button class="btn solid" id="saveBtn">Save this message</button>
+    </div>
+  </div>
 
-      <div class="gallery-actions">
-        <button id="exportBtn" class="secondary-btn">Export List</button>
-        <button id="clearBtn" class="danger-outline-btn">Clear All</button>
-      </div>
+  <!-- ====== THANKS ====== -->
+  <div class="screen thanks hidden" id="screen-thanks">
+    <h2>Thank you!</h2>
+    <p>Your message has been added to the guestbook.</p>
+  </div>
 
-      <div id="galleryList" class="gallery-list"></div>
-      <p id="emptyGallery" class="empty-text hidden">No videos saved yet.</p>
-    </section>
-  </main>
+  <!-- ====== ERROR ====== -->
+  <div class="screen error hidden" id="screen-error">
+    <h2>Camera access needed</h2>
+    <p id="errorText">This guestbook needs camera and microphone access. Please allow access when prompted, or check Settings → Safari → Camera/Microphone on this iPad.</p>
+    <button class="btn solid" style="margin-top:20px" id="retryBtn">Try again</button>
+  </div>
 
-  <div id="toast" class="toast hidden"></div>
-  <script src="db.js"></script>
-  <script src="app.js"></script>
+  <!-- ====== HOST ====== -->
+  <div class="screen host hidden" id="screen-host">
+    <h2>Host Gallery</h2>
+    <p class="sub" id="hostSub">0 messages recorded this session</p>
+    <div class="host-actions">
+      <button class="btn solid" id="downloadAllBtn">Download all</button>
+      <button class="btn ghost" id="closeHostBtn">Back to guestbook</button>
+    </div>
+    <div id="clipList"></div>
+  </div>
+</div>
+
+<script>
+const CONFIG={names:"Michael & Kianna",date:"July 12, 2026",maxSeconds:60,prompts:["What's your favorite memory with the two of us?","Any advice for a long, happy marriage?","Tell us a wish for our future together.","Where should we go on our next big adventure?","Sum up tonight in one word — then explain why.","What was your first impression of us as a couple?","Leave us a toast, big or small.","Tell us your favorite inside joke with us.","What do you hope for us in the next ten years?","Say whatever's in your heart right now."]};
+document.getElementById('namesDisplay').textContent=CONFIG.names;
+document.getElementById('dateDisplay').textContent=CONFIG.date;
+
+let stream=null,mediaRecorder=null,chunks=[],currentBlob=null,mimeType='video/webm',lastPromptIndex=-1,recording=false,timerInterval=null,autoStopTimeout=null,elapsed=0;
+const clips=[];
+const screens={idle:document.getElementById('screen-idle'),record:document.getElementById('screen-record'),review:document.getElementById('screen-review'),thanks:document.getElementById('screen-thanks'),error:document.getElementById('screen-error'),host:document.getElementById('screen-host')};
+function show(n){Object.values(screens).forEach(s=>s.classList.add('hidden'));screens[n].classList.remove('hidden')}
+
+async function ensureStream(){
+  if(stream)return true;
+  try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:1280},height:{ideal:720}},audio:true});document.getElementById('preview').srcObject=stream;
+  if(MediaRecorder.isTypeSupported('video/mp4'))mimeType='video/mp4';else if(MediaRecorder.isTypeSupported('video/webm;codecs=vp9,opus'))mimeType='video/webm;codecs=vp9,opus';else mimeType='video/webm';return true}
+  catch(e){document.getElementById('errorText').textContent='Camera or microphone access was blocked. Please allow access when prompted, or check Settings \u2192 Safari \u2192 Camera/Microphone. ('+e.name+')';show('error');return false}
+}
+document.getElementById('startBtn').addEventListener('click',async()=>{if(await ensureStream())startRecordScreen()});
+document.getElementById('retryBtn').addEventListener('click',async()=>{if(await ensureStream())show('idle')});
+
+function pickPrompt(){let i;do{i=Math.floor(Math.random()*CONFIG.prompts.length)}while(CONFIG.prompts.length>1&&i===lastPromptIndex);lastPromptIndex=i;return CONFIG.prompts[i]}
+function startRecordScreen(){document.getElementById('promptText').textContent=pickPrompt();document.getElementById('recIndicator').classList.add('hidden');document.getElementById('recordToggle').classList.remove('active');recording=false;show('record')}
+document.getElementById('cancelRecord').addEventListener('click',()=>{if(recording)stopRecording(true);show('idle')});
+document.getElementById('recordToggle').addEventListener('click',()=>{if(!recording)startRecording();else stopRecording(false)});
+
+function startRecording(){chunks=[];try{mediaRecorder=new MediaRecorder(stream,{mimeType})}catch(e){mediaRecorder=new MediaRecorder(stream)}mediaRecorder.ondataavailable=e=>{if(e.data.size>0)chunks.push(e.data)};mediaRecorder.onstop=handleRecordingStop;mediaRecorder.start();recording=true;elapsed=0;document.getElementById('recIndicator').classList.remove('hidden');document.getElementById('recordToggle').classList.add('active');updateTimer();timerInterval=setInterval(updateTimer,1000);autoStopTimeout=setTimeout(()=>stopRecording(false),CONFIG.maxSeconds*1000)}
+function updateTimer(){const m=String(Math.floor(elapsed/60)).padStart(2,'0'),s=String(elapsed%60).padStart(2,'0');document.getElementById('timer').textContent=m+':'+s;elapsed++}
+function stopRecording(discard){clearInterval(timerInterval);clearTimeout(autoStopTimeout);recording=false;if(mediaRecorder&&mediaRecorder.state!=='inactive'){if(discard)mediaRecorder.onstop=()=>{};mediaRecorder.stop()}}
+function handleRecordingStop(){if(!chunks.length)return;currentBlob=new Blob(chunks,{type:mimeType});document.getElementById('playback').src=URL.createObjectURL(currentBlob);show('review')}
+
+document.getElementById('retakeBtn').addEventListener('click',()=>{currentBlob=null;startRecordScreen()});
+document.getElementById('saveBtn').addEventListener('click',()=>{const ext=mimeType.includes('mp4')?'mp4':'webm',when=new Date(),stamp=when.toISOString().replace(/[:.]/g,'-'),filename=CONFIG.names.replace(/[^a-z0-9]+/gi,'-').toLowerCase()+'-guestbook-'+stamp+'.'+ext;clips.push({id:clips.length+1,blob:currentBlob,url:URL.createObjectURL(currentBlob),filename,when:when.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})});currentBlob=null;show('thanks');setTimeout(()=>show('idle'),2600)});
+
+let pressTimer=null;const hostTrigger=document.getElementById('hostTrigger');
+['mousedown','touchstart'].forEach(e=>{hostTrigger.addEventListener(e,()=>{pressTimer=setTimeout(openHost,1400)})});
+['mouseup','mouseleave','touchend','touchcancel'].forEach(e=>{hostTrigger.addEventListener(e,()=>clearTimeout(pressTimer))});
+function openHost(){renderHostList();show('host')}
+document.getElementById('closeHostBtn').addEventListener('click',()=>show('idle'));
+
+function renderHostList(){const list=document.getElementById('clipList'),sub=document.getElementById('hostSub');sub.textContent=clips.length+(clips.length===1?' message':' messages')+' recorded this session';list.innerHTML='';if(!clips.length){list.innerHTML='<p class="empty-note">No messages saved yet.</p>';return}clips.forEach(clip=>{const row=document.createElement('div');row.className='clip-row';row.innerHTML='<span>#'+clip.id+' \u00b7 '+clip.when+'</span><span><a class="dl" download="'+clip.filename+'" href="'+clip.url+'">Download</a><button class="del" data-id="'+clip.id+'">Delete</button></span>';list.appendChild(row)});list.querySelectorAll('.del').forEach(btn=>{btn.addEventListener('click',()=>{const idx=clips.findIndex(c=>c.id===Number(btn.dataset.id));if(idx>-1)clips.splice(idx,1);renderHostList()})})}
+document.getElementById('downloadAllBtn').addEventListener('click',()=>{document.querySelectorAll('#clipList a.dl').forEach((a,i)=>setTimeout(()=>a.click(),i*500))});
+window.addEventListener('beforeunload',e=>{if(clips.length>0){e.preventDefault();e.returnValue=''}});
+</script>
 </body>
 </html>
