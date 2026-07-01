@@ -377,15 +377,10 @@ document.getElementById('saveBtn').addEventListener('click', () => {
     const when = new Date();
     const stamp = when.toISOString().replace(/[:.]/g, '-');
 
-    let guestName = "";
+    let guestName = prompt("Please enter your name:") || "Guest";
+    guestName = guestName.trim() || "Guest";
     
-    while (!guestName.trim()) {
-        guestName = prompt("Please enter your name:");
-    }
-
-    const ext = mimeType.includes('mp4') ? 'mp4' : 'webm';
-    const when = new Date();
-    const stamp = when.toISOString().replace(/[:.]/g, '-');
+    const safeName = guestName.replace(/[^a-z0-9]/gi, "_");
 
     const filename = `${safeName}-${stamp}.${ext}`;
 
@@ -401,6 +396,14 @@ document.getElementById('saveBtn').addEventListener('click', () => {
     // Clean up memory
     setTimeout(() => URL.revokeObjectURL(url), 5000);
 
+    clips.push({
+        id: clips.length + 1,
+        filename,
+        when: when.toLocaleString(),
+        url,
+        guest: guestName
+    });
+  
     currentBlob = null;
     show('thanks');
     setTimeout(() => show('idle'), 2600);
