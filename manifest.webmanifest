@@ -1,0 +1,15 @@
+{
+  "name": "Guest Video Book",
+  "short_name": "Video Book",
+  "description": "A private local guest video book for wedding messages.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f9f3ff",
+  "theme_color": "#7b5ac8",
+  "icons": [
+    { "src": "icons/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml", "purpose": "any maskable" },
+    { "src": "icons/icon-512.svg", "sizes": "512x512", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

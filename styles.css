@@ -1,0 +1,152 @@
+:root {
+  --bg: #f9f3ff;
+  --card: rgba(255, 255, 255, 0.82);
+  --text: #24182f;
+  --muted: #6f6079;
+  --primary: #7b5ac8;
+  --primary-dark: #6244ab;
+  --danger: #b63f4f;
+  --gold: #c7a35a;
+  --shadow: 0 22px 70px rgba(76, 43, 118, 0.18);
+  --radius: 34px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  width: 100%;
+  min-height: 100%;
+  background: radial-gradient(circle at top left, #e7dcff 0%, transparent 34%),
+              radial-gradient(circle at bottom right, #fff2d8 0%, transparent 34%),
+              var(--bg);
+  color: var(--text);
+  font-family: ui-rounded, "SF Pro Rounded", "Avenir Next", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  overscroll-behavior: none;
+}
+
+button, input { font: inherit; }
+button { cursor: pointer; touch-action: manipulation; }
+
+.app-shell {
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: max(24px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left));
+  display: grid;
+  place-items: center;
+}
+
+.screen { display: none; width: min(940px, 100%); }
+.screen.active { display: block; }
+
+.hero-card, .success-card {
+  background: var(--card);
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(255,255,255,0.8);
+  box-shadow: var(--shadow);
+  border-radius: var(--radius);
+  padding: clamp(32px, 7vw, 76px);
+  text-align: center;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-weight: 800;
+  font-size: 0.9rem;
+}
+.eyebrow.small { font-size: 0.72rem; margin-bottom: 3px; }
+
+h1, h2 { margin: 0; line-height: 1.02; }
+h1 { font-size: clamp(3rem, 9vw, 6.8rem); letter-spacing: -0.06em; }
+h2 { font-size: clamp(2rem, 5vw, 3.6rem); letter-spacing: -0.04em; }
+
+.subtitle { color: var(--muted); font-size: clamp(1.15rem, 3vw, 1.7rem); margin: 20px auto 28px; max-width: 690px; }
+.prompt-card { margin: 28px auto 34px; max-width: 720px; border-radius: 24px; padding: 20px 24px; background: #fff; border: 1px solid rgba(123, 90, 200, 0.15); }
+.prompt-card p { margin: 0; font-size: clamp(1.1rem, 2.4vw, 1.45rem); color: var(--text); }
+.privacy-note, .help-text, .empty-text { color: var(--muted); }
+.privacy-note { margin-bottom: 0; }
+
+.primary-btn, .secondary-btn, .danger-btn, .danger-outline-btn {
+  border: 0;
+  border-radius: 999px;
+  min-height: 64px;
+  padding: 0 34px;
+  font-weight: 850;
+  font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+  box-shadow: 0 14px 28px rgba(55, 31, 91, 0.13);
+}
+.primary-btn { color: white; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); }
+.secondary-btn { color: var(--primary-dark); background: white; border: 1px solid rgba(123,90,200,0.18); margin-left: 12px; }
+.danger-btn { color: white; background: var(--danger); }
+.danger-outline-btn { color: var(--danger); background: white; border: 1px solid rgba(182,63,79,0.24); }
+
+.top-bar { display: flex; align-items: center; gap: 18px; margin-bottom: 18px; }
+.icon-btn { width: 58px; height: 58px; border-radius: 50%; border: 0; background: white; color: var(--primary-dark); font-size: 2rem; box-shadow: var(--shadow); }
+
+.camera-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #1b1422;
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+#previewVideo, #reviewVideo { width: 100%; background: #1b1422; border-radius: 28px; display: block; }
+#previewVideo { height: 100%; object-fit: cover; transform: scaleX(-1); }
+#reviewVideo { max-height: 68vh; }
+
+.countdown {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: white;
+  font-size: clamp(7rem, 18vw, 14rem);
+  font-weight: 900;
+  background: rgba(0,0,0,0.28);
+}
+.recording-badge {
+  position: absolute;
+  left: 18px;
+  top: 18px;
+  color: white;
+  background: rgba(0,0,0,0.55);
+  border-radius: 999px;
+  padding: 10px 16px;
+  font-weight: 800;
+}
+.recording-badge span { display: inline-block; width: 12px; height: 12px; background: #ff3b30; border-radius: 50%; margin-right: 8px; animation: pulse 1s infinite; }
+@keyframes pulse { 50% { opacity: .35; } }
+
+.guest-form { margin: 18px 0; display: grid; gap: 8px; }
+.guest-form label { color: var(--muted); font-weight: 750; }
+.guest-form input { width: 100%; border: 0; border-radius: 20px; padding: 18px 20px; font-size: 1.25rem; background: white; box-shadow: inset 0 0 0 1px rgba(123,90,200,0.16); }
+.controls { margin-top: 18px; display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; }
+.two-col button { min-width: 220px; }
+
+.gallery-actions { display: flex; gap: 12px; flex-wrap: wrap; margin: 12px 0 20px; }
+.gallery-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.video-card { background: white; border-radius: 22px; padding: 14px; box-shadow: 0 12px 34px rgba(76, 43, 118, 0.12); }
+.video-card video { width: 100%; border-radius: 16px; background: #1b1422; }
+.video-card h3 { margin: 10px 0 4px; }
+.video-card p { margin: 0 0 10px; color: var(--muted); }
+.card-actions { display: flex; gap: 8px; }
+.card-actions button, .card-actions a { flex: 1; text-align: center; text-decoration: none; border: 0; border-radius: 14px; padding: 12px 10px; font-weight: 800; background: #f4eefc; color: var(--primary-dark); }
+.card-actions .delete-one { color: var(--danger); background: #fff0f2; }
+
+.success-card { max-width: 620px; margin: auto; }
+.heart { width: 94px; height: 94px; display: grid; place-items: center; margin: 0 auto 16px; border-radius: 50%; background: #fff; color: var(--primary); font-size: 3.2rem; box-shadow: var(--shadow); }
+
+.toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom)); transform: translateX(-50%); background: #24182f; color: white; padding: 14px 18px; border-radius: 999px; font-weight: 800; box-shadow: var(--shadow); z-index: 20; }
+.hidden { display: none !important; }
+
+@media (max-width: 680px) {
+  .app-shell { padding: 18px; }
+  .secondary-btn { margin-left: 0; margin-top: 12px; }
+  .primary-btn, .secondary-btn, .danger-btn, .danger-outline-btn { width: 100%; }
+  .camera-wrap { aspect-ratio: 9 / 16; }
+}
