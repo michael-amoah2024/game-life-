@@ -372,8 +372,29 @@ function stopRecording(discard){clearInterval(timerInterval);clearTimeout(autoSt
 function handleRecordingStop(){if(!chunks.length)return;currentBlob=new Blob(chunks,{type:mimeType});document.getElementById('playback').src=URL.createObjectURL(currentBlob);show('review')}
 
 document.getElementById('retakeBtn').addEventListener('click',()=>{currentBlob=null;startRecordScreen()});
-document.getElementById('saveBtn').addEventListener('click',()=>{const ext=mimeType.includes('mp4')?'mp4':'webm',when=new Date(),stamp=when.toISOString().replace(/[:.]/g,'-'),filename=CONFIG.names.replace(/[^a-z0-9]+/gi,'-').toLowerCase()+'-guestbook-'+stamp+'.'+ext;clips.push({id:clips.length+1,blob:currentBlob,url:URL.createObjectURL(currentBlob),filename,when:when.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})});currentBlob=null;show('thanks');setTimeout(()=>show('idle'),2600)});
+document.getElementById('saveBtn').addEventListener('click', () => {
+    const ext = mimeType.includes('mp4') ? 'mp4' : 'webm';
+    const when = new Date();
+    const stamp = when.toISOString().replace(/[:.]/g, '-');
+    const filename =
+        'guestbook-' + stamp + '.' + ext;
 
+    // Create download
+    const url = URL.createObjectURL(currentBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    // Clean up memory
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+
+    currentBlob = null;
+    show('thanks');
+    setTimeout(() => show('idle'), 2600);
+});
 let pressTimer=null;const hostTrigger=document.getElementById('hostTrigger');
 ['mousedown','touchstart'].forEach(e=>{hostTrigger.addEventListener(e,()=>{pressTimer=setTimeout(openHost,1400)})});
 ['mouseup','mouseleave','touchend','touchcancel'].forEach(e=>{hostTrigger.addEventListener(e,()=>clearTimeout(pressTimer))});
