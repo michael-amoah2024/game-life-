@@ -376,8 +376,18 @@ document.getElementById('saveBtn').addEventListener('click', () => {
     const ext = mimeType.includes('mp4') ? 'mp4' : 'webm';
     const when = new Date();
     const stamp = when.toISOString().replace(/[:.]/g, '-');
-    const filename =
-        'guestbook-' + stamp + '.' + ext;
+
+    let guestName = "";
+    
+    while (!guestName.trim()) {
+        guestName = prompt("Please enter your name:");
+    }
+
+    const ext = mimeType.includes('mp4') ? 'mp4' : 'webm';
+    const when = new Date();
+    const stamp = when.toISOString().replace(/[:.]/g, '-');
+
+    const filename = `${safeName}-${stamp}.${ext}`;
 
     // Create download
     const url = URL.createObjectURL(currentBlob);
