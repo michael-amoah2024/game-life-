@@ -112,6 +112,22 @@
   .clip-row .dl{background:var(--gold);color:var(--card);border:none}
   .clip-row .del{background:transparent;border:2px solid var(--red);color:var(--red)}
   .empty-note{color:var(--ink-soft);font-style:italic}
+
+  #shufflePrompt {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    background: rgba(255,255,255,.18);
+    border: 1px solid rgba(255,255,255,.4);
+    color: #fff;
+    font-family: var(--font-d);
+    font-size: 13px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    letter-spacing: .03em;
+    z-index: 10;
+  }
 </style>
 </head>
 <body>
@@ -299,7 +315,10 @@
 
   <!-- ====== RECORD ====== -->
   <div class="screen record hidden" id="screen-record">
-    <div class="prompt-bar"><p id="promptText"></p></div>
+    <div class="prompt-bar">
+      <p id="promptText"></p>
+      <button id="shufflePrompt">✦ different question</button>
+    </div>
     <video id="preview" autoplay playsinline muted></video>
     <div class="hud">
       <div class="rec-indicator hidden" id="recIndicator"><span class="dot"></span><span class="mono" style="font-family:var(--font-m)" id="timer">00:00</span></div>
@@ -377,6 +396,11 @@ function startRecordScreen(){
   
   show('record');
 } 
+
+document.getElementById('shufflePrompt').addEventListener('click', () => {
+document.getElementById('promptText').textContent = pickPrompt();
+});
+
 document.getElementById('cancelRecord').addEventListener('click',()=>{if(recording)stopRecording(true);show('idle')});
 document.getElementById('recordToggle').addEventListener('click',()=>{if(!recording)startRecording();else stopRecording(false)});
 
@@ -462,6 +486,7 @@ document.getElementById('closeHostBtn').addEventListener('click',()=>show('idle'
 function renderHostList(){const list=document.getElementById('clipList'),sub=document.getElementById('hostSub');sub.textContent=clips.length+(clips.length===1?' message':' messages')+' recorded this session';list.innerHTML='';if(!clips.length){list.innerHTML='<p class="empty-note">No messages saved yet.</p>';return}clips.forEach(clip=>{const row=document.createElement('div');row.className='clip-row';row.innerHTML='<span>#'+clip.id+' \u00b7 '+clip.when+'</span><span><a class="dl" download="'+clip.filename+'" href="'+clip.url+'">Download</a><button class="del" data-id="'+clip.id+'">Delete</button></span>';list.appendChild(row)});list.querySelectorAll('.del').forEach(btn=>{btn.addEventListener('click',()=>{const idx=clips.findIndex(c=>c.id===Number(btn.dataset.id));if(idx>-1)clips.splice(idx,1);renderHostList()})})}
 document.getElementById('downloadAllBtn').addEventListener('click',()=>{document.querySelectorAll('#clipList a.dl').forEach((a,i)=>setTimeout(()=>a.click(),i*500))});
 window.addEventListener('beforeunload',e=>{if(clips.length>0){e.preventDefault();e.returnValue=''}});
+  
 </script>
 </body>
 </html>
