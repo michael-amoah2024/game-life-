@@ -137,14 +137,19 @@
   opacity: .9;
 }
 
-@media (max-width: 768px) and (orientation: portrait) {
-  .headline { font-size: clamp(26px, 6vw, 42px); margin: 0 0 8px; }
+@media (max-width: 1200px) {
+  #bg-video {
+    object-position: center bottom;
+  }
+  .z2 {
+    margin-top: -80px;
+  }
+  .headline { font-size: 42px; margin: 0 0 8px; }
   .tagline  { font-size: 16px; margin: 0 auto 12px; }
-  .names    { font-size: clamp(20px, 5vw, 32px); }
+  .names    { font-size: 28px; }
   .date-line{ margin: 4px 0 16px; }
-  .tap-target{ width: 100px; height: 100px; font-size: 16px; }
+  .tap-target{ width: 105px; height: 105px; font-size: 16px; }
   .hint     { margin-top: 10px; font-size: 13px; }
-  .z2       { padding-bottom: 20px; }
 }
   
 </style>
@@ -154,7 +159,7 @@
 
   <!-- ====== IDLE ====== -->
 <div class="screen idle" id="screen-idle">
-  <video autoplay muted loop playsinline id="bg-video" src="flowers moving.mp4"></video>
+  <video autoplay muted loop playsinline id="bg-video" src="flowers_moving.mp4"></video>
 
     <!-- ===== LEFT FLORAL — anchored bottom-left ===== -->
     <div class="fc" style="bottom:0;left:0;width:220px;height:55%">
@@ -390,8 +395,19 @@ document.getElementById('dateDisplay').textContent=CONFIG.date;
 let stream=null,mediaRecorder=null,chunks=[],currentBlob=null,mimeType='video/webm',lastPromptIndex=-1,recording=false,timerInterval=null,autoStopTimeout=null,elapsed=0;
 const clips=[];
 const screens={idle:document.getElementById('screen-idle'),record:document.getElementById('screen-record'),review:document.getElementById('screen-review'),thanks:document.getElementById('screen-thanks'),error:document.getElementById('screen-error'),host:document.getElementById('screen-host')};
-function show(n){Object.values(screens).forEach(s=>s.classList.add('hidden'));screens[n].classList.remove('hidden')}
-
+function show(n){
+  Object.values(screens).forEach(s=>s.classList.add('hidden'));
+  screens[n].classList.remove('hidden');
+  
+  // Restart background video when returning to idle
+  if(n === 'idle') {
+    const bgVideo = document.getElementById('bg-video');
+    if(bgVideo) {
+      bgVideo.currentTime = 0;
+      bgVideo.play();
+    }
+  }
+}
 async function ensureStream(){
   if(stream)return true;
   try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:1280},height:{ideal:720}},audio:true});document.getElementById('preview').srcObject=stream;
