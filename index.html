@@ -362,15 +362,37 @@ document.getElementById('startBtn').addEventListener('click',async()=>{if(await 
 document.getElementById('retryBtn').addEventListener('click',async()=>{if(await ensureStream())show('idle')});
 
 function pickPrompt(){let i;do{i=Math.floor(Math.random()*CONFIG.prompts.length)}while(CONFIG.prompts.length>1&&i===lastPromptIndex);lastPromptIndex=i;return CONFIG.prompts[i]}
-function startRecordScreen(){document.getElementById('promptText').textContent=pickPrompt();document.getElementById('recIndicator').classList.add('hidden');document.getElementById('recordToggle').classList.remove('active');recording=false;show('record')}
+function startRecordScreen(){
+  document.getElementById('promptText').textContent=pickPrompt();
+  document.getElementById('recIndicator').classList.add('hidden');
+  document.getElementById('recordToggle').classList.remove('active');
+  recording=false;
+  elapsed=0;
+  document.getElementById('timer').textContent='00:00';
+  
+  // Reset the preview video element so it's not frozen
+  const preview = document.getElementById('preview');
+  preview.srcObject = null;
+  preview.srcObject = stream;
+  
+  show('record');
+} 
 document.getElementById('cancelRecord').addEventListener('click',()=>{if(recording)stopRecording(true);show('idle')});
 document.getElementById('recordToggle').addEventListener('click',()=>{if(!recording)startRecording();else stopRecording(false)});
 
 function startRecording(){chunks=[];try{mediaRecorder=new MediaRecorder(stream,{mimeType})}catch(e){mediaRecorder=new MediaRecorder(stream)}mediaRecorder.ondataavailable=e=>{if(e.data.size>0)chunks.push(e.data)};mediaRecorder.onstop=handleRecordingStop;mediaRecorder.start();recording=true;elapsed=0;document.getElementById('recIndicator').classList.remove('hidden');document.getElementById('recordToggle').classList.add('active');updateTimer();timerInterval=setInterval(updateTimer,1000);autoStopTimeout=setTimeout(()=>stopRecording(false),CONFIG.maxSeconds*1000)}
 function updateTimer(){const m=String(Math.floor(elapsed/60)).padStart(2,'0'),s=String(elapsed%60).padStart(2,'0');document.getElementById('timer').textContent=m+':'+s;elapsed++}
 function stopRecording(discard){clearInterval(timerInterval);clearTimeout(autoStopTimeout);recording=false;if(mediaRecorder&&mediaRecorder.state!=='inactive'){if(discard)mediaRecorder.onstop=()=>{};mediaRecorder.stop()}}
-function handleRecordingStop(){if(!chunks.length)return;currentBlob=new Blob(chunks,{type:mimeType});document.getElementById('playback').src=URL.createObjectURL(currentBlob);show('review')}
-
+function handleRecordingStop(){
+  if(!chunks.length)return;
+  currentBlob=new Blob(chunks,{type:mimeType});
+  document.getElementById('playback').src=URL.createObjectURL(currentBlob);
+  
+  // Reset chunks so next recording starts clean
+  chunks=[];
+  
+  show('review');
+}
 document.getElementById('retakeBtn').addEventListener('click',()=>{currentBlob=null;startRecordScreen()});
 
 const SUPABASE_URL = 'https://tnegqlitzkkjpngobvtd.supabase.co';
