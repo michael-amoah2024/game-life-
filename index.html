@@ -372,42 +372,65 @@ function stopRecording(discard){clearInterval(timerInterval);clearTimeout(autoSt
 function handleRecordingStop(){if(!chunks.length)return;currentBlob=new Blob(chunks,{type:mimeType});document.getElementById('playback').src=URL.createObjectURL(currentBlob);show('review')}
 
 document.getElementById('retakeBtn').addEventListener('click',()=>{currentBlob=null;startRecordScreen()});
-document.getElementById('saveBtn').addEventListener('click', () => {
-    const ext = mimeType.includes('mp4') ? 'mp4' : 'webm';
-    const when = new Date();
-    const stamp = when.toISOString().replace(/[:.]/g, '-');
 
-    let guestName = prompt("Please enter your name:") || "Guest";
-    guestName = guestName.trim() || "Guest";
-    
-    const safeName = guestName.replace(/[^a-z0-9]/gi, "_");
+const SUPABASE_URL = 'https://tnegqlitzkkjpngobvtd.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRuZWdxbGl0emtranBuZ29idnRkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI5MzAwOTksImV4cCI6MjA5ODUwNjA5OX0.7xMgdz-AbgnN3tUwXfUGybt1q3E4QeKWOsEvWw2oKd4';
 
-    const filename = `${safeName}-${stamp}.${ext}`;
+async function uploadToSupabase(blob, filename) {
+  const res = await fetch(
+    `${SUPABASE_URL}/storage/v1/object/guestbook-videos/${filename}`,
+    {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Content-Type': blob.type,
+        'x-upsert': 'false'
+      },
+      body: blob
+    }
+  );
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Upload failed: ${err}`);
+  }
+  return `${SUPABASE_URL}/storage/v1/object/public/guestbook-videos/${filename}`;
+}
 
-    // Create download
-    const url = URL.createObjectURL(currentBlob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+document.getElementById('saveBtn').addEventListener('click', async () => {
+  const ext = mimeType.includes('mp4') ? 'mp4' : 'webm';
+  const when = new Date();
+  const stamp = when.toISOString().replace(/[:.]/g, '-');
 
-    // Clean up memory
-    setTimeout(() => URL.revokeObjectURL(url), 5000);
+  let guestName = prompt("Please enter your name:") || "Guest";
+  guestName = guestName.trim() || "Guest";
+  const safeName = guestName.replace(/[^a-z0-9]/gi, "_");
+  const filename = `${safeName}-${stamp}.${ext}`;
 
+  const saveBtn = document.getElementById('saveBtn');
+  saveBtn.textContent = 'Uploading…';
+  saveBtn.disabled = true;
+
+  try {
+    const publicUrl = await uploadToSupabase(currentBlob, filename);
     clips.push({
-        id: clips.length + 1,
-        filename,
-        when: when.toLocaleString(),
-        url,
-        guest: guestName
+      id: clips.length + 1,
+      filename,
+      when: when.toLocaleString(),
+      url: publicUrl,
+      guest: guestName
     });
-  
     currentBlob = null;
     show('thanks');
     setTimeout(() => show('idle'), 2600);
+  } catch (err) {
+    alert('Upload failed — please check your connection and try again.\n\n' + err.message);
+    console.error(err);
+  } finally {
+    saveBtn.textContent = 'Save this message';
+    saveBtn.disabled = false;
+  }
 });
+  
 let pressTimer=null;const hostTrigger=document.getElementById('hostTrigger');
 ['mousedown','touchstart'].forEach(e=>{hostTrigger.addEventListener(e,()=>{pressTimer=setTimeout(openHost,1400)})});
 ['mouseup','mouseleave','touchend','touchcancel'].forEach(e=>{hostTrigger.addEventListener(e,()=>clearTimeout(pressTimer))});
