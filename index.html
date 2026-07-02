@@ -378,7 +378,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 async function uploadToSupabase(blob, filename) {
   const res = await fetch(
-    `${SUPABASE_URL}/storage/v1/object/guestbook-videos/${filename}`,
+    `${SUPABASE_URL}/storage/v1/object/videos/${filename}`,
     {
       method: 'POST',
       headers: {
@@ -393,7 +393,7 @@ async function uploadToSupabase(blob, filename) {
     const err = await res.text();
     throw new Error(`Upload failed: ${err}`);
   }
-  return `${SUPABASE_URL}/storage/v1/object/public/guestbook-videos/${filename}`;
+  return `${SUPABASE_URL}/storage/v1/object/public/videos/${filename}`;
 }
 
 document.getElementById('saveBtn').addEventListener('click', async () => {
